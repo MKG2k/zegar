@@ -1,3 +1,5 @@
+//zmiana w kodzie
+
 void setup() {
   pinMode(12, OUTPUT);
 }

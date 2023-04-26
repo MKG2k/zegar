@@ -12,28 +12,45 @@
 #include "multipleks.h"
 
 
+
 #define data_value = 0
 
 
-const uint8_t cyfry[] PROGMEM = {
-		(SEG_A|SEG_B|SEG_C|SEG_D|SEG_E|SEG_F),			//0
-		(SEG_B|SEG_C),									//1
-		(SEG_A|SEG_B|SEG_G|SEG_E|SEG_D),				//2
-		(SEG_A|SEG_B|SEG_G|SEG_C|SEG_D),				//3
-		(SEG_F|SEG_G|SEG_B|SEG_C),						//4
-		(SEG_A|SEG_F|SEG_G|SEG_C|SEG_D),				//5
-		(SEG_A|SEG_C|SEG_D|SEG_E|SEG_F|SEG_G),			//6
-		(SEG_A|SEG_B|SEG_C),							//7
-		(SEG_A|SEG_B|SEG_C|SEG_D|SEG_E|SEG_F|SEG_G),	//8
-		(SEG_A|SEG_B|SEG_C|SEG_D|SEG_F|SEG_G),			//9
-		0x00											//10
-};
+//const uint8_t cyfry[] PROGMEM = {
+		//(SEG_A|SEG_B|SEG_C|SEG_D|SEG_E|SEG_F),			//0
+		//(SEG_B|SEG_C),									//1
+		//(SEG_A|SEG_B|SEG_G|SEG_E|SEG_D),				//2
+		//(SEG_A|SEG_B|SEG_G|SEG_C|SEG_D),				//3
+		//(SEG_F|SEG_G|SEG_B|SEG_C),						//4
+		//(SEG_A|SEG_F|SEG_G|SEG_C|SEG_D),				//5
+		//(SEG_A|SEG_C|SEG_D|SEG_E|SEG_F|SEG_G),			//6
+		//(SEG_A|SEG_B|SEG_C),							//7
+		//(SEG_A|SEG_B|SEG_C|SEG_D|SEG_E|SEG_F|SEG_G),	//8
+		//(SEG_A|SEG_B|SEG_C|SEG_D|SEG_F|SEG_G),			//9
+		//0x00											//10
+//};
 
-uint8_t cyfra[4];
+//uint8_t cyfra[4];
 uint8_t z1, z2, z3, z4;
+volatile uint8_t kropka;
+
 volatile uint8_t numerZnaku=1;
 
 volatile uint8_t katoda=0b00000001;
+
+void obsluzKropke()
+{
+	if(kropka > 0)
+	{
+		PORTD |= (1<<PIND0);
+	}
+	else
+	{
+		PORTD &= ~(1<<PIND0);
+	}
+	
+}
+
 unsigned int PodajZnak(uint8_t znak)
 {
 
@@ -83,8 +100,8 @@ void wyswietl(uint8_t segment, uint8_t cyfra)
 		break;
 		case 2:
 		SEGMENTY_PORT=	PodajZnak(cyfra) ;
+		obsluzKropke();
 		KATODY_PORT=KATODA_2;
-		
 		
 		break;
 		case 3:

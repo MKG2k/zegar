@@ -47,6 +47,13 @@ void zgasLedSec()
 {
 	PORTD &= ~(1<<PIND0);
 }
+void zmianaTrybuLed()
+{
+	PORTC |= (1<<PINC1);
+	_delay_ms(100);
+	PORTC &= ~(1<<PINC1);
+	_delay_ms(100);
+}
 
 void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
 {
@@ -74,23 +81,22 @@ void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
 
 void ObsluzPrzyciskZmianyTrybu()
 { 
-	ustawLed(false);
+	
 	if(!(PINC & (1<<PINC2)))
 	{
-		
+		ustawLed(true);
+		zmianaTrybuLed();
 		tryb++;
-		
-		cyfra[0]=0;
-		cyfra[1]=0;
-		cyfra[2]=0;
-		cyfra[3]=tryb;
-		
+				
 		while(!(PINC & (1<<PINC2))){}
 		if(tryb == 3)
 		tryb = 0;
-	}
-		ustawLed(true);
+		ustawLed(false);
 }
+
+}
+
+
 
 void read_rtc(void)
 {
@@ -121,10 +127,10 @@ int main(void){
 //ds1302_update(rtc);   // update all fields in the struct
 //ds1302_set_time(rtc, SEC, 31);	//set the seconds to 31
 
-	cyfra[0] = 1;
-	cyfra[1] = 1;
-	cyfra[2] = 1;
-	cyfra[3] = 1;
+	//cyfra[0] = 1;
+	//cyfra[1] = 1;
+	//cyfra[2] = 1;
+	//cyfra[3] = 1;
 	uint16_t licznik = 0;
 	sei();
 	z1=1;
@@ -137,6 +143,9 @@ int main(void){
 	
 	DDRC&=~(1<<PINC2);
 	PORTC|=(1<<PINC2);
+	
+	//DDRC&=~(1<<PINC1);
+	//PORTC|=(1<<PINC1);
 	
 	DDRC|=(1<<PINC0);
 	
@@ -153,6 +162,7 @@ int main(void){
 			rtc_get_time_s(&hour, &min, &sec);
 			
 			uint8_t oldSec = sec;
+	
 	while(1) {
 		
 		ustawLed(false);
@@ -162,18 +172,18 @@ int main(void){
 			switch (tryb)
 			{
 				case 0:
-						ustawLed(true);
+						
 						
 							rtc_get_time_s(&hour, &min, &sec);
 							if(sec % 2 )
 							{
-								ustawLedSec();
+								kropka = 1;
 								
 								
 							}
 							else
 							{
-								zgasLedSec();
+								kropka = 0;
 							}
 							//min
 							z1 = hour/10;
@@ -187,27 +197,27 @@ int main(void){
 							
 				break;
 				case 1: //tryb 2
+							
 							ObsluzPrzycisk(&flagaPrzycisku, &flagaZatrzymania);
 
 
-
+							if(licznik > 100)
+							{
+								kropka = 1;
+							}
+							else
+							{
+								kropka = 0;
+							}
 
 							z1 = licznik/1000;
 
-							if(z1) cyfra[0] = z1;
-							else cyfra [0]= 10;
-							
 							z2 = (licznik-(z1*1000))/100;
-							if (z2) cyfra[1] = z2;
-							else cyfra[1]= (licznik>999) ?0:10;
-						
+	
 							z3 = (licznik-(z1*1000)-(z2*100))/10;
-							if (z3) cyfra [2]=z3;
-							else cyfra [2]=(licznik>99) ?0:10;
-						
+
 							z4 = (licznik-(z1*1000)-(z2*100)-(z3*10));
-							cyfra[3] = z4;
-						
+
 							_delay_ms(50);
 
 							if(flagaZatrzymania==0)
@@ -218,20 +228,17 @@ int main(void){
 							if(licznik == 9999) licznik = 0;
 				break;
 				case 2:
+							
 							ObsluzPrzycisk(&flagaPrzycisku, &flagaZatrzymania);
 
 							z1 = licznik/1000;
 
-							if(z1) cyfra[0] = z1;
-							else cyfra [0]= 10;
 							z2 = (licznik-(z1*1000))/100;
-							if (z2) cyfra[1] = z2;
-							else cyfra[1]= (licznik>999) ?0:10;
+							
 							z3 = (licznik-(z1*1000)-(z2*100))/10;
-							if (z3) cyfra [2]=z3;
-							else cyfra [2]=(licznik>99) ?0:10;
+
 							z4 = (licznik-(z1*1000)-(z2*100)-(z3*10));
-							cyfra[3] = z4;
+
 							_delay_ms(50);
 
 							if(flagaZatrzymania==0)

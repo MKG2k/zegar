@@ -31,8 +31,9 @@
 
 #define dataValue			0
 
-extern uint8_t cyfra[4];
+
 extern uint8_t z1, z2, z3, z4;
+extern volatile uint8_t kropka;
 
 extern volatile uint8_t numerZnaku;
 

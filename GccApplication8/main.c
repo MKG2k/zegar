@@ -1,9 +1,9 @@
 /*
- * GccApplication5.c
- *
- * Created: 13.01.2023 15:36:50
- * Author : Michał
- */ 
+* GccApplication5.c
+*
+* Created: 13.01.2023 15:36:50
+* Author : Michał
+*/
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -15,9 +15,13 @@
 #include "multipleks.h"
 
 volatile unsigned int stoper = 1;
-	uint8_t tryb;
-	uint8_t flagaZatrzymania=0;
-	uint16_t licznik = 0;
+uint8_t tryb;
+uint8_t flagaZatrzymania=0;
+uint16_t licznikStopera = 0;
+uint16_t licznikMinutnika = 0;
+uint16_t licznikMinutnikaStartowy = 0;
+uint8_t flagaMinutnika = 0;
+volatile uint32_t licznikCzasu = 0;
 void ustawLed(bool v)
 {
 	if(v == true)
@@ -55,7 +59,15 @@ void zmianaTrybuLed()
 	PORTC &= ~(1<<PINC1);
 	_delay_ms(100);
 }
+void wylaczLicznikCzasu()
+{
+	
 
+	TCCR1B&=~(1<<CS11);
+	TCCR1B&=~(1<<CS10);
+	
+	
+}
 void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
 {
 	if(!(PINC & (1<<PINC3)))
@@ -64,7 +76,8 @@ void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
 		{
 			*flagaPrzycisku=1;
 			*flagaZatrzymania=1;
-			_delay_ms(100);	
+			wylaczLicznikCzasu();
+			_delay_ms(100);
 			while(!(PINC & (1<<PINC3))){}
 			return;
 		}
@@ -82,43 +95,90 @@ void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
 	}
 }
 
+void MinutnikPrzyciskRozpoczynajacyOdliczanie()
+{
+	if(!(PINC & (1<<PINC3)))
+	{
+		while(!(PINC & (1<<PINC3))){}
+		flagaMinutnika=1;
+		
+		
+	}
+}
+
+
 void ObsluzPrzyciskZmianyTrybu()
-{ 
+{
 	
 	if(!(PINC & (1<<PINC2)))
 	{
 		ustawLed(true);
 		zmianaTrybuLed();
 		tryb++;
-				
-				flagaZatrzymania = 1;
-				licznik = 0;
 		
-	
+		flagaZatrzymania = 1;
+		licznikStopera = 0;
+		
+		
 		if(tryb == 3)
 		tryb = 0;
 		ustawLed(false);
+	}
+
 }
 
+void uruchomLicznikCzasu()
+{
+	licznikCzasu = 0;
+	TCCR1B |= (1<<CS11)|(1<<CS10);
 }
 void wyzerowanie()
 {
 	if(!(PINB & (1<<PINB4)))
 	{
 		while(!(PINB & (1<<PINB4))){}
-			flagaZatrzymania=1;
-			licznik = 0;
+		flagaZatrzymania=1;
+		licznikStopera = 0;
+		uruchomLicznikCzasu();
+		
 	}
 }
+void MinutnikWyzerowanie()
+{
+	if(!(PINB & (1<<PINB4)))
+	{
+		while(!(PINB & (1<<PINB4))){}
+		licznikMinutnikaStartowy=licznikMinutnika;
+		uruchomLicznikCzasu();
+		
+	}
+}
+void MinutnikZmianaWartosciWGore()
+{
+	if(!(PINB & (1<<PINB4)))
+	{
+		_delay_ms(100);
+		
+		if(!(PINB & (1<<PINB4))) licznikMinutnika++;
 
+		
+	}
+}
 
 
 void read_rtc(void)
 {
 	
-		uint8_t hour, min, sec;
-		rtc_get_time_s(&hour, &min, &sec);
+	uint8_t hour, min, sec;
+	rtc_get_time_s(&hour, &min, &sec);
 }
+
+ISR(	TIMER1_COMPA_vect	) {
+	
+	licznikCzasu ++;
+	
+}
+
 
 
 
@@ -132,24 +192,25 @@ int main(void){
 	//podawanie stanu wysokiego na tranzystory (stan niski na katodę)
 	//KATODY_PORT = (KATODA_1|KATODA_2|KATODA_3|KATODA_4);
 
-//unsigned char sec, temp;
-//sec = 0;
-//struct rtc_time ds1302;
-//struct rtc_time *rtc;
-//rtc = &ds1302;
+	//unsigned char sec, temp;
+	//sec = 0;
+	//struct rtc_time ds1302;
+	//struct rtc_time *rtc;
+	//rtc = &ds1302;
 
-//ds1302_init();
-//ds1302_update(rtc);   // update all fields in the struct
-//ds1302_set_time(rtc, SEC, 31);	//set the seconds to 31
+	//ds1302_init();
+	//ds1302_update(rtc);   // update all fields in the struct
+	//ds1302_set_time(rtc, SEC, 31);	//set the seconds to 31
 
 	//cyfra[0] = 1;
 	//cyfra[1] = 1;
 	//cyfra[2] = 1;
 	//cyfra[3] = 1;
-			
-			TCCR1B |= (1<<CS00)|(1<<CS02);
-			OCR2 = 155;
-			TIMSK |= (1<<OCIE2);
+	OCR1A = 12499;
+
+	TIMSK |= (1<<OCIE1A);
+	TCCR1B |= (1<<WGM12);
+	
 	
 	
 	
@@ -183,106 +244,108 @@ int main(void){
 	
 
 	
-				
-			uint8_t hour, min, sec;
-			
-			rtc_get_time_s(&hour, &min, &sec);
-			
-		
+	
+	uint8_t hour, min, sec;
+	
+	rtc_get_time_s(&hour, &min, &sec);
+	
+	
 	
 	while(1) {
 		
 		ustawLed(false);
 		
 		
+		
+		switch (tryb)
+		{
+			case 0:
 			
-			switch (tryb)
+			
+			rtc_get_time_s(&hour, &min, &sec);
+			if(sec % 2 )
 			{
-				case 0:
-						
-						
-							rtc_get_time_s(&hour, &min, &sec);
-							if(sec % 2 )
-							{
-								kropka = 1;
-								
-								
-							}
-							else
-							{
-								kropka = 0;
-							}
-							//min
-							z1 = hour/10;
-			
-							z2 = (hour-(z1*10));
-
-							z3 = min/10;
-							
-							z4 = (min-(z3*10));
-	
-							
-				break;
-				case 1: //tryb 2
-							
-							ObsluzPrzycisk(&flagaPrzycisku, &flagaZatrzymania);
-							wyzerowanie();
-
-							if(licznik > 100)
-							{
-								kropka = 1;
-							}
-							else
-							{
-								kropka = 0;
-							}
-
-							z1 = licznik/1000;
-
-							z2 = (licznik-(z1*1000))/100;
-	
-							z3 = (licznik-(z1*1000)-(z2*100))/10;
-
-							z4 = (licznik-(z1*1000)-(z2*100)-(z3*10));
-
-							_delay_ms(50);
-
-							if(flagaZatrzymania==0)
-							{
-								licznik++;
-							}
-
-							if(licznik == 9999) licznik = 0;
-				break;
-				case 2:
-							
-							ObsluzPrzycisk(&flagaPrzycisku, &flagaZatrzymania);
-							wyzerowanie();
-
-							z1 = licznik/1000;
-
-							z2 = (licznik-(z1*1000))/100;
-							
-							z3 = (licznik-(z1*1000)-(z2*100))/10;
-
-							z4 = (licznik-(z1*1000)-(z2*100)-(z3*10));
-
-							_delay_ms(50);
-
-							if(flagaZatrzymania==0)
-							{
-								licznik--;
-							}
-
-							if(licznik == 9999) licznik = 0;
+				kropka = 1;
 				
-				break;
-				default:
-				/* Your code here */
-				break;
+				
+			}
+			else
+			{
+				kropka = 0;
+			}
+			//min
+			z1 = hour/10;
+			
+			z2 = (hour-(z1*10));
+
+			z3 = min/10;
+			
+			z4 = (min-(z3*10));
+			
+			
+			break;
+			case 1: //tryb 2
+			
+			ObsluzPrzycisk(&flagaPrzycisku, &flagaZatrzymania);
+			wyzerowanie();
+			licznikStopera = licznikCzasu/10;
+			if(licznikStopera > 100)
+			{
+				kropka = 1;
+			}
+			else
+			{
+				kropka = 0;
 			}
 
-	ObsluzPrzyciskZmianyTrybu();
+			z1 = licznikStopera/1000;
+
+			z2 = (licznikStopera-(z1*1000))/100;
+			
+			z3 = (licznikStopera-(z1*1000)-(z2*100))/10;
+
+			z4 = (licznikStopera-(z1*1000)-(z2*100)-(z3*10));
+
+
+			if(licznikStopera == 9999) wylaczLicznikCzasu();
+			
+			break;
+			case 2:
+				switch (flagaMinutnika)
+				{
+					case 0:
+					
+					MinutnikZmianaWartosciWGore();
+					MinutnikPrzyciskRozpoczynajacyOdliczanie();
+					
+					break;
+					
+					case 1:
+				
+					MinutnikWyzerowanie();
+
+					licznikMinutnika=licznikMinutnikaStartowy-(licznikCzasu/10);
+				
+
+					if(licznikMinutnika == 0) wylaczLicznikCzasu();
+					break;
+				}
+				
+			z1 = licznikMinutnika/1000;
+
+			z2 = (licznikMinutnika-(z1*1000))/100;
+			
+			z3 = (licznikMinutnika-(z1*1000)-(z2*100))/10;
+
+			z4 = (licznikMinutnika-(z1*1000)-(z2*100)-(z3*10));
+			
+			break;
+			default:
+			/* Your code here */
+			break;
+		}
+
+		ObsluzPrzyciskZmianyTrybu();
 	}
 	
 

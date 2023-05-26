@@ -16,7 +16,8 @@
 
 volatile unsigned int stoper = 1;
 	uint8_t tryb;
-	
+	uint8_t flagaZatrzymania=0;
+	uint16_t licznik = 0;
 void ustawLed(bool v)
 {
 	if(v == true)
@@ -63,7 +64,8 @@ void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
 		{
 			*flagaPrzycisku=1;
 			*flagaZatrzymania=1;
-			_delay_ms(100);
+			_delay_ms(100);	
+			while(!(PINC & (1<<PINC3))){}
 			return;
 		}
 		
@@ -73,6 +75,7 @@ void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
 			*flagaPrzycisku=0;
 			*flagaZatrzymania=0;
 			_delay_ms(100);
+			while(!(PINC & (1<<PINC3))){}
 			return;
 		}
 		
@@ -88,12 +91,24 @@ void ObsluzPrzyciskZmianyTrybu()
 		zmianaTrybuLed();
 		tryb++;
 				
-		while(!(PINC & (1<<PINC2))){}
+				flagaZatrzymania = 1;
+				licznik = 0;
+		
+	
 		if(tryb == 3)
 		tryb = 0;
 		ustawLed(false);
 }
 
+}
+void wyzerowanie()
+{
+	if(!(PINB & (1<<PINB4)))
+	{
+		while(!(PINB & (1<<PINB4))){}
+			flagaZatrzymania=1;
+			licznik = 0;
+	}
 }
 
 
@@ -131,7 +146,13 @@ int main(void){
 	//cyfra[1] = 1;
 	//cyfra[2] = 1;
 	//cyfra[3] = 1;
-	uint16_t licznik = 0;
+			
+			TCCR1B |= (1<<CS00)|(1<<CS02);
+			OCR2 = 155;
+			TIMSK |= (1<<OCIE2);
+	
+	
+	
 	sei();
 	z1=1;
 	z2=2;
@@ -144,6 +165,12 @@ int main(void){
 	DDRC&=~(1<<PINC2);
 	PORTC|=(1<<PINC2);
 	
+	DDRB&=~(1<<PINB4);
+	PORTB|=(1<<PINB4);
+	
+	DDRB&=~(1<<PINB5);
+	PORTB|=(1<<PINB5);
+	
 	//DDRC&=~(1<<PINC1);
 	//PORTC|=(1<<PINC1);
 	
@@ -153,15 +180,15 @@ int main(void){
 
 
 	uint8_t flagaPrzycisku=0;
-	uint8_t flagaZatrzymania=0;
+	
 
-		uint8_t zz1, zz2, zz3, zz4;
+	
 				
 			uint8_t hour, min, sec;
 			
 			rtc_get_time_s(&hour, &min, &sec);
 			
-			uint8_t oldSec = sec;
+		
 	
 	while(1) {
 		
@@ -199,7 +226,7 @@ int main(void){
 				case 1: //tryb 2
 							
 							ObsluzPrzycisk(&flagaPrzycisku, &flagaZatrzymania);
-
+							wyzerowanie();
 
 							if(licznik > 100)
 							{
@@ -230,6 +257,7 @@ int main(void){
 				case 2:
 							
 							ObsluzPrzycisk(&flagaPrzycisku, &flagaZatrzymania);
+							wyzerowanie();
 
 							z1 = licznik/1000;
 

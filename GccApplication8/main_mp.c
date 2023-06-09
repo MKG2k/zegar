@@ -38,18 +38,7 @@ volatile uint8_t numerZnaku=1;
 
 volatile uint8_t katoda=0b00000001;
 
-void obsluzKropke()
-{
-	if(kropka > 0)
-	{
-		PORTD |= (1<<PIND0);
-	}
-	else
-	{
-		PORTD &= ~(1<<PIND0);
-	}
-	
-}
+void obsluzKropke();
 
 unsigned int PodajZnak(uint8_t znak)
 {

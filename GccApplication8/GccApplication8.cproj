@@ -121,6 +121,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Kropka.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Kropka.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="LED.c">
       <SubType>compile</SubType>
     </Compile>

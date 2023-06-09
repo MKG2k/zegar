@@ -13,11 +13,30 @@ void obsluzKropke()
 {
 	if(kropka > 0)
 	{
-		K1_PORT |= (1<<K1_PIN);
+		K_PORT |= (1<<K_PIN);
 	}
 	else
 	{
-		K1_PORT &= ~(1<<K1_PIN);
+		K_PORT &= ~(1<<K_PIN);
 	}
 	
+}
+void ledSec(void)
+{
+	if(!(K_PIN & (1<<K_PIN)))
+	{
+		K_PORT |= (1<<K_PIN);
+	}
+	else
+	{
+		K_PORT &= ~(1<<K_PIN);
+	}
+}
+void ustawLedSec()
+{
+	K_PORT |= (1<<K_PIN);
+}
+void zgasLedSec()
+{
+	K_PORT &= ~(1<<K_PIN);
 }

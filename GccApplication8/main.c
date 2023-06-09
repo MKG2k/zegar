@@ -26,25 +26,10 @@ uint8_t flagaZatrzymania=0;
 
 
 
-void ledSec(void)
-{
-	if(!(PIND & (1<<PIND0)))
-	{
-		PORTD |= (1<<PIND0);
-	}
-	else
-	{
-		PORTD &= ~(1<<PIND0);
-	}
-}
-void ustawLedSec()
-{
-	PORTD |= (1<<PIND0);
-}
-void zgasLedSec()
-{
-	PORTD &= ~(1<<PIND0);
-}
+void ledSec(void);
+void ustawLedSec();
+void zgasLedSec();
+
 void zmianaTrybuLed()
 {
 	PORTC |= (1<<PINC1);

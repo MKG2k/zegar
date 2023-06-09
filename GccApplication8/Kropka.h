@@ -8,9 +8,13 @@
 
 
 
-#define K1_PIN PD0
-#define K1_STAN
-#define K1_DDR DDRD
-#define K1_PORT PORTD
+#define K_PIN PD0
+#define K_STAN
+#define K_DDR DDRD
+#define K_PORT PORTD
+
 
 void obsluzKropke();
+void ledSec(void);
+void ustawLedSec();
+void zgasLedSec();

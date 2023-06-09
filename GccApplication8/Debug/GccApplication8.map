@@ -33,6 +33,11 @@ Discarded input sections
  .text          0x00000000        0x0 Kropka.o
  .data          0x00000000        0x0 Kropka.o
  .bss           0x00000000        0x0 Kropka.o
+ .text.ledSec   0x00000000        0x8 Kropka.o
+ .text.ustawLedSec
+                0x00000000        0x8 Kropka.o
+ .text.zgasLedSec
+                0x00000000        0x8 Kropka.o
  .text          0x00000000        0x0 LED.o
  .data          0x00000000        0x0 LED.o
  .bss           0x00000000        0x0 LED.o
@@ -42,11 +47,6 @@ Discarded input sections
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
- .text.ledSec   0x00000000       0x14 main.o
- .text.ustawLedSec
-                0x00000000        0x8 main.o
- .text.zgasLedSec
-                0x00000000        0x8 main.o
  .text.read_rtc
                 0x00000000       0x2a main.o
  .text          0x00000000        0x0 main_mp.o
@@ -768,13 +768,13 @@ END GROUP
 .debug_aranges  0x00000000      0x388
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x20 Kropka.o
+                0x00000000       0x38 Kropka.o
  .debug_aranges
-                0x00000020       0x20 LED.o
+                0x00000038       0x20 LED.o
  .debug_aranges
-                0x00000040       0x28 LicznikCzasu.o
+                0x00000058       0x28 LicznikCzasu.o
  .debug_aranges
-                0x00000068       0x68 main.o
+                0x00000080       0x50 main.o
  .debug_aranges
                 0x000000d0       0x38 main_mp.o
  .debug_aranges
@@ -796,10 +796,10 @@ END GROUP
 .debug_info     0x00000000     0x324a
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x48c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega8a/avr4/crtatmega8a.o
- .debug_info    0x0000048c       0x99 Kropka.o
- .debug_info    0x00000525       0xae LED.o
- .debug_info    0x000005d3       0xb9 LicznikCzasu.o
- .debug_info    0x0000068c      0x62b main.o
+ .debug_info    0x0000048c       0xd9 Kropka.o
+ .debug_info    0x00000565       0xae LED.o
+ .debug_info    0x00000613       0xb9 LicznikCzasu.o
+ .debug_info    0x000006cc      0x5eb main.o
  .debug_info    0x00000cb7      0x305 main_mp.o
  .debug_info    0x00000fbc      0x1a4 Minutnik.o
  .debug_info    0x00001160       0xc1 Przyciski.o
@@ -808,42 +808,42 @@ END GROUP
  .debug_info    0x00002812      0x4e6 twi-lowlevel.o
  .debug_info    0x00002cf8      0x552 twi.o
 
-.debug_abbrev   0x00000000     0x1081
+.debug_abbrev   0x00000000     0x106b
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x44e C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega8a/avr4/crtatmega8a.o
- .debug_abbrev  0x0000044e       0x67 Kropka.o
- .debug_abbrev  0x000004b5       0x71 LED.o
- .debug_abbrev  0x00000526       0x67 LicznikCzasu.o
- .debug_abbrev  0x0000058d      0x212 main.o
- .debug_abbrev  0x0000079f      0x179 main_mp.o
- .debug_abbrev  0x00000918      0x102 Minutnik.o
- .debug_abbrev  0x00000a1a       0x4f Przyciski.o
- .debug_abbrev  0x00000a69      0x289 rtc.o
- .debug_abbrev  0x00000cf2       0x44 Stoper.o
- .debug_abbrev  0x00000d36      0x195 twi-lowlevel.o
- .debug_abbrev  0x00000ecb      0x1b6 twi.o
+ .debug_abbrev  0x0000044e       0x7f Kropka.o
+ .debug_abbrev  0x000004cd       0x71 LED.o
+ .debug_abbrev  0x0000053e       0x67 LicznikCzasu.o
+ .debug_abbrev  0x000005a5      0x1e4 main.o
+ .debug_abbrev  0x00000789      0x179 main_mp.o
+ .debug_abbrev  0x00000902      0x102 Minutnik.o
+ .debug_abbrev  0x00000a04       0x4f Przyciski.o
+ .debug_abbrev  0x00000a53      0x289 rtc.o
+ .debug_abbrev  0x00000cdc       0x44 Stoper.o
+ .debug_abbrev  0x00000d20      0x195 twi-lowlevel.o
+ .debug_abbrev  0x00000eb5      0x1b6 twi.o
 
-.debug_line     0x00000000     0x1e93
+.debug_line     0x00000000     0x1e87
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x10a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega8a/avr4/crtatmega8a.o
- .debug_line    0x0000010a       0xaf Kropka.o
- .debug_line    0x000001b9       0xc4 LED.o
- .debug_line    0x0000027d       0xcb LicznikCzasu.o
- .debug_line    0x00000348      0x469 main.o
- .debug_line    0x000007b1      0x283 main_mp.o
- .debug_line    0x00000a34      0x18c Minutnik.o
- .debug_line    0x00000bc0      0x100 Przyciski.o
- .debug_line    0x00000cc0      0x9c4 rtc.o
- .debug_line    0x00001684       0x8d Stoper.o
- .debug_line    0x00001711      0x477 twi-lowlevel.o
- .debug_line    0x00001b88      0x30b twi.o
+ .debug_line    0x0000010a       0xf1 Kropka.o
+ .debug_line    0x000001fb       0xc4 LED.o
+ .debug_line    0x000002bf       0xcb LicznikCzasu.o
+ .debug_line    0x0000038a      0x41b main.o
+ .debug_line    0x000007a5      0x283 main_mp.o
+ .debug_line    0x00000a28      0x18c Minutnik.o
+ .debug_line    0x00000bb4      0x100 Przyciski.o
+ .debug_line    0x00000cb4      0x9c4 rtc.o
+ .debug_line    0x00001678       0x8d Stoper.o
+ .debug_line    0x00001705      0x477 twi-lowlevel.o
+ .debug_line    0x00001b7c      0x30b twi.o
 
 .debug_frame    0x00000000      0x870
  *(.debug_frame)
- .debug_frame   0x00000000       0x24 Kropka.o
- .debug_frame   0x00000024       0x24 LED.o
- .debug_frame   0x00000048       0x34 LicznikCzasu.o
- .debug_frame   0x0000007c       0xf4 main.o
+ .debug_frame   0x00000000       0x54 Kropka.o
+ .debug_frame   0x00000054       0x24 LED.o
+ .debug_frame   0x00000078       0x34 LicznikCzasu.o
+ .debug_frame   0x000000ac       0xc4 main.o
  .debug_frame   0x00000170       0x9c main_mp.o
  .debug_frame   0x0000020c       0x44 Minutnik.o
  .debug_frame   0x00000250       0x54 Przyciski.o
@@ -854,14 +854,14 @@ END GROUP
 .debug_str      0x00000000      0xaf9
  *(.debug_str)
  .debug_str     0x00000000      0x17a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega8a/avr4/crtatmega8a.o
- .debug_str     0x0000017a      0x13f Kropka.o
-                                0x173 (size before relaxing)
- .debug_str     0x000002b9       0x1e LED.o
+ .debug_str     0x0000017a      0x15d Kropka.o
+                                0x191 (size before relaxing)
+ .debug_str     0x000002d7       0x1e LED.o
                                 0x16f (size before relaxing)
- .debug_str     0x000002d7       0x51 LicznikCzasu.o
+ .debug_str     0x000002f5       0x51 LicznikCzasu.o
                                 0x1a2 (size before relaxing)
- .debug_str     0x00000328      0x1e7 main.o
-                                0x38e (size before relaxing)
+ .debug_str     0x00000346      0x1c9 main.o
+                                0x370 (size before relaxing)
  .debug_str     0x0000050f       0x52 main_mp.o
                                 0x212 (size before relaxing)
  .debug_str     0x00000561       0x10 Minutnik.o
@@ -907,10 +907,10 @@ END GROUP
 
 .debug_ranges   0x00000000      0x2e8
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x10 Kropka.o
- .debug_ranges  0x00000010       0x10 LED.o
- .debug_ranges  0x00000020       0x18 LicznikCzasu.o
- .debug_ranges  0x00000038       0x58 main.o
+ .debug_ranges  0x00000000       0x28 Kropka.o
+ .debug_ranges  0x00000028       0x10 LED.o
+ .debug_ranges  0x00000038       0x18 LicznikCzasu.o
+ .debug_ranges  0x00000050       0x40 main.o
  .debug_ranges  0x00000090       0x28 main_mp.o
  .debug_ranges  0x000000b8       0x20 Minutnik.o
  .debug_ranges  0x000000d8       0x28 Przyciski.o

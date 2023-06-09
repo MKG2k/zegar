@@ -13,26 +13,19 @@
 #include "rtc.h"
 #include "twi.h"
 #include "multipleks.h"
+#include "Minutnik.h"
+#include "Stoper.h"
+#include "LicznikCzasu.h"
+#include "Przyciski.h"
+#include "LED.h"
+#include "stdbool.h"
 
-volatile unsigned int stoper = 1;
 uint8_t tryb;
 uint8_t flagaZatrzymania=0;
-uint16_t licznikStopera = 0;
-uint16_t licznikMinutnika = 0;
-uint16_t licznikMinutnikaStartowy = 0;
-uint8_t flagaMinutnika = 0;
-volatile uint32_t licznikCzasu = 0;
-void ustawLed(bool v)
-{
-	if(v == true)
-	{
-		PORTC |= (1<<PINC0);
-	}
-	else
-	{
-		PORTC &= ~(1<<PINC0);
-	}
-}
+
+
+
+
 void ledSec(void)
 {
 	if(!(PIND & (1<<PIND0)))
@@ -59,15 +52,8 @@ void zmianaTrybuLed()
 	PORTC &= ~(1<<PINC1);
 	_delay_ms(100);
 }
-void wylaczLicznikCzasu()
-{
 	
 
-	TCCR1B&=~(1<<CS11);
-	TCCR1B&=~(1<<CS10);
-	
-	
-}
 void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
 {
 	if(!(PINC & (1<<PINC3)))
@@ -95,24 +81,13 @@ void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
 	}
 }
 
-void MinutnikPrzyciskRozpoczynajacyOdliczanie()
-{
-	if(!(PINC & (1<<PINC3)))
-	{
-		while(!(PINC & (1<<PINC3))){}
-		flagaMinutnika=1;
-		
-		
-	}
-}
-
 
 void ObsluzPrzyciskZmianyTrybu()
 {
 	
 	if(!(PINC & (1<<PINC2)))
 	{
-		ustawLed(true);
+		LEDSet(true, LED2_PIN);
 		zmianaTrybuLed();
 		tryb++;
 		
@@ -122,16 +97,12 @@ void ObsluzPrzyciskZmianyTrybu()
 		
 		if(tryb == 3)
 		tryb = 0;
-		ustawLed(false);
+		LEDSet(false, LED2_PIN);
 	}
 
 }
 
-void uruchomLicznikCzasu()
-{
-	licznikCzasu = 0;
-	TCCR1B |= (1<<CS11)|(1<<CS10);
-}
+
 void wyzerowanie()
 {
 	if(!(PINB & (1<<PINB4)))
@@ -143,27 +114,8 @@ void wyzerowanie()
 		
 	}
 }
-void MinutnikWyzerowanie()
-{
-	if(!(PINB & (1<<PINB4)))
-	{
-		while(!(PINB & (1<<PINB4))){}
-		licznikMinutnikaStartowy=licznikMinutnika;
-		uruchomLicznikCzasu();
-		
-	}
-}
-void MinutnikZmianaWartosciWGore()
-{
-	if(!(PINB & (1<<PINB4)))
-	{
-		_delay_ms(100);
-		
-		if(!(PINB & (1<<PINB4))) licznikMinutnika++;
 
-		
-	}
-}
+
 
 
 void read_rtc(void)
@@ -220,20 +172,10 @@ int main(void){
 	z3=3;
 	z4=4;
 
-	DDRC&=~(1<<PINC3);
-	PORTC|=(1<<PINC3);
-	
-	DDRC&=~(1<<PINC2);
-	PORTC|=(1<<PINC2);
-	
-	DDRB&=~(1<<PINB4);
-	PORTB|=(1<<PINB4);
-	
-	DDRB&=~(1<<PINB5);
-	PORTB|=(1<<PINB5);
-	
-	//DDRC&=~(1<<PINC1);
-	//PORTC|=(1<<PINC1);
+P1_init();
+P2_init();
+P3_init();
+P4_init();
 	
 	DDRC|=(1<<PINC0);
 	
@@ -253,7 +195,7 @@ int main(void){
 	
 	while(1) {
 		
-		ustawLed(false);
+		LEDSet(false, LED2_PIN);
 		
 		
 		

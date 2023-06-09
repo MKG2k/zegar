@@ -121,19 +121,49 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="LED.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LED.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LicznikCzasu.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LicznikCzasu.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main_mp.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Minutnik.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Minutnik.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="multipleks.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Przyciski.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Przyciski.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="rtc.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="rtc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Stoper.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Stoper.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="twi-lowlevel.c">

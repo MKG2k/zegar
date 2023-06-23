@@ -12,13 +12,13 @@ void wylaczLicznikCzasu()
 {
 	
 
-	TCCR1B&=~(1<<CS11);
-	TCCR1B&=~(1<<CS10);
+//	TCCR1B&=~(1<<CS11);
+//	TCCR1B&=~(1<<CS10);
 	
 	
 }
 void uruchomLicznikCzasu()
 {
 	licznikCzasu = 0;
-	TCCR1B |= (1<<CS11)|(1<<CS10);
+	
 }

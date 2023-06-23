@@ -46,6 +46,7 @@ C_SRCS +=  \
 ../Przyciski.c \
 ../rtc.c \
 ../Stoper.c \
+../Timer1.c \
 ../twi-lowlevel.c \
 ../twi.c
 
@@ -66,6 +67,7 @@ Minutnik.o \
 Przyciski.o \
 rtc.o \
 Stoper.o \
+Timer1.o \
 twi-lowlevel.o \
 twi.o
 
@@ -79,6 +81,7 @@ Minutnik.o \
 Przyciski.o \
 rtc.o \
 Stoper.o \
+Timer1.o \
 twi-lowlevel.o \
 twi.o
 
@@ -92,6 +95,7 @@ Minutnik.d \
 Przyciski.d \
 rtc.d \
 Stoper.d \
+Timer1.d \
 twi-lowlevel.d \
 twi.d
 
@@ -105,6 +109,7 @@ Minutnik.d \
 Przyciski.d \
 rtc.d \
 Stoper.d \
+Timer1.d \
 twi-lowlevel.d \
 twi.d
 
@@ -179,6 +184,13 @@ LINKER_SCRIPT_DEP+=
 	
 
 ./Stoper.o: .././Stoper.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=8000000  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega8a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega8a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./Timer1.o: .././Timer1.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=8000000  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega8a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega8a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

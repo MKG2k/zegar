@@ -20,6 +20,7 @@
 #include "LED.h"
 #include "stdbool.h"
 #include "Kropka.h"
+#include "Timer1.h"
 
 uint8_t tryb;
 uint8_t flagaZatrzymania=0;
@@ -87,11 +88,7 @@ void read_rtc(void)
 	rtc_get_time_s(&hour, &min, &sec);
 }
 
-ISR(	TIMER1_COMPA_vect	) {
-	
-	licznikCzasu ++;
-	
-}
+
 
 
 
@@ -120,10 +117,8 @@ int main(void){
 	//cyfra[1] = 1;
 	//cyfra[2] = 1;
 	//cyfra[3] = 1;
-	OCR1A = 12499;
-
-	TIMSK |= (1<<OCIE1A);
-	TCCR1B |= (1<<WGM12);
+	
+	initTimer1();
 	
 	
 	

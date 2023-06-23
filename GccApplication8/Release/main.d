@@ -19,8 +19,8 @@ main.d main.o: .././main.c \
  .././rtc.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
  .././twi.h .././multipleks.h .././Minutnik.h .././Stoper.h \
- .././LicznikCzasu.h .././Przyciski.h .././Timer1.h .././LED.h \
- .././Kropka.h
+ .././LicznikCzasu.h .././Przyciski.h .././LED.h .././Kropka.h \
+ .././Timer1.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -72,8 +72,8 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\
 
 .././Przyciski.h:
 
-.././Timer1.h:
-
 .././LED.h:
 
 .././Kropka.h:
+
+.././Timer1.h:

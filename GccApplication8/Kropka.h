@@ -5,7 +5,7 @@
  *  Author: Michał
  */ 
 
-
+#include <stdbool.h>
 
 
 #define K_PIN PD0
@@ -14,7 +14,4 @@
 #define K_PORT PORTD
 
 
-void obsluzKropke();
-void ledSec(void);
-void ustawLedSec();
-void zgasLedSec();
+void obsluzKropke(bool kropka);

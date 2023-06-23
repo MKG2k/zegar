@@ -6,10 +6,10 @@
  */ 
 #include <avr/io.h>
 #include "Kropka.h"
+#include <stdbool.h>
 
-volatile uint8_t kropka;
 
-void obsluzKropke()
+void obsluzKropke(bool kropka)
 {
 	if(kropka > 0)
 	{
@@ -20,23 +20,4 @@ void obsluzKropke()
 		K_PORT &= ~(1<<K_PIN);
 	}
 	
-}
-void ledSec(void)
-{
-	if(!(K_PIN & (1<<K_PIN)))
-	{
-		K_PORT |= (1<<K_PIN);
-	}
-	else
-	{
-		K_PORT &= ~(1<<K_PIN);
-	}
-}
-void ustawLedSec()
-{
-	K_PORT |= (1<<K_PIN);
-}
-void zgasLedSec()
-{
-	K_PORT &= ~(1<<K_PIN);
 }

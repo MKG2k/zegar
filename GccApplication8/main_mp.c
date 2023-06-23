@@ -10,8 +10,8 @@
 #include <util/delay.h>
 
 #include "multipleks.h"
-
-
+#include "Kropka.h"
+#include <stdbool.h>
 
 #define data_value = 0
 
@@ -31,14 +31,20 @@
 //};
 
 //uint8_t cyfra[4];
-uint8_t z1, z2, z3, z4;
-volatile uint8_t kropka;
+//uint8_t z1, z2, z3, z4;
+
+struct WyswietlaczStruktura Wyswietlacz;  
+
+
+
+
+
+
 
 volatile uint8_t numerZnaku=1;
 
 volatile uint8_t katoda=0b00000001;
 
-void obsluzKropke();
 
 unsigned int PodajZnak(uint8_t znak)
 {
@@ -73,7 +79,7 @@ unsigned int PodajZnak(uint8_t znak)
 	
 }
 
-void wyswietl(uint8_t segment, uint8_t cyfra)
+void wyswietl(uint8_t segment, uint8_t cyfra, bool kropka)
 {
 
 	KATODY_PORT=0;
@@ -83,24 +89,27 @@ void wyswietl(uint8_t segment, uint8_t cyfra)
 		case 1:
 		
 		SEGMENTY_PORT =	PodajZnak(cyfra) ;//(SEG_A|SEG_B|SEG_G|SEG_C|SEG_D);
+		obsluzKropke(kropka);
 		KATODY_PORT=KATODA_1;
 		
 		
 		break;
 		case 2:
 		SEGMENTY_PORT=	PodajZnak(cyfra) ;
-		obsluzKropke();
+		obsluzKropke(kropka);
 		KATODY_PORT=KATODA_2;
 		
 		break;
 		case 3:
 		
 		SEGMENTY_PORT=	PodajZnak(cyfra) ;
+		obsluzKropke(kropka);
 		KATODY_PORT=KATODA_3;
 		
 		break;
 		case 4:
 		SEGMENTY_PORT=	PodajZnak(cyfra) ;
+		obsluzKropke(kropka);
 		KATODY_PORT=KATODA_4;
 		
 		
@@ -139,16 +148,16 @@ ISR(	TIMER2_COMP_vect	) {
 switch (numerZnaku)
 {
 	case 1:
-	wyswietl(numerZnaku,z1);
+	wyswietl(numerZnaku,Wyswietlacz.z1, Wyswietlacz.k1);
 	break;
 		case 2:
-		wyswietl(numerZnaku,z2);
+		wyswietl(numerZnaku,Wyswietlacz.z2, Wyswietlacz.k2);
 		break;
 			case 3:
-			wyswietl(numerZnaku,z3);
+			wyswietl(numerZnaku,Wyswietlacz.z3, Wyswietlacz.k3);
 			break;
 				case 4:
-				wyswietl(numerZnaku,z4);
+				wyswietl(numerZnaku,Wyswietlacz.z4, Wyswietlacz.k4);
 				break;
 	default:
 	/* Your code here */

@@ -4,7 +4,7 @@
  *  Created on: 5 sty 2023
  *      Author: Michał
  */
-
+#include <stdbool.h>
 #ifndef MULTIPLEKS_MULTIPLEKS_H_
 #define MULTIPLEKS_MULTIPLEKS_H_
 
@@ -32,13 +32,22 @@
 #define dataValue			0
 
 
-extern uint8_t z1, z2, z3, z4;
+//extern uint8_t z1, z2, z3, z4;
 extern volatile uint8_t kropka;
 
 extern volatile uint8_t numerZnaku;
 
+struct WyswietlaczStruktura {
+	int z1, z2, z3, z4;
+	bool k1, k2, k3, k4;
+};
+
+struct WyswietlaczStruktura Wyswietlacz; 
+
+
+
 void multipleks_init( void );
-void wyswietl(uint8_t segment, uint8_t cyfra);
+void wyswietl(uint8_t segment, uint8_t cyfra, bool kropka);
 unsigned int PodajZnak(uint8_t znak);
 
 #endif /* MULTIPLEKS_MULTIPLEKS_H_ */

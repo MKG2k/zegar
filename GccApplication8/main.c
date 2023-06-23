@@ -19,10 +19,11 @@
 #include "Przyciski.h"
 #include "LED.h"
 #include "stdbool.h"
+#include "Kropka.h"
 
 uint8_t tryb;
 uint8_t flagaZatrzymania=0;
-
+extern struct WyswietlaczStruktura Wyswietlacz; 
 
 
 
@@ -30,13 +31,7 @@ void ledSec(void);
 void ustawLedSec();
 void zgasLedSec();
 
-void zmianaTrybuLed()
-{
-	PORTC |= (1<<PINC1);
-	_delay_ms(100);
-	PORTC &= ~(1<<PINC1);
-	_delay_ms(100);
-}
+
 	
 
 void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
@@ -67,25 +62,7 @@ void ObsluzPrzycisk(uint8_t *flagaPrzycisku, uint8_t *flagaZatrzymania)
 }
 
 
-void ObsluzPrzyciskZmianyTrybu()
-{
-	
-	if(!(PINC & (1<<PINC2)))
-	{
-		LEDSet(true, LED2_PIN);
-		zmianaTrybuLed();
-		tryb++;
-		
-		flagaZatrzymania = 1;
-		licznikStopera = 0;
-		
-		
-		if(tryb == 3)
-		tryb = 0;
-		LEDSet(false, LED2_PIN);
-	}
 
-}
 
 
 void wyzerowanie()
@@ -152,15 +129,17 @@ int main(void){
 	
 	
 	sei();
-	z1=1;
-	z2=2;
-	z3=3;
-	z4=4;
+	Wyswietlacz.z1=1;
+	Wyswietlacz.z2=2;
+	Wyswietlacz.z3=3;
+	Wyswietlacz.z4=4;
 
 P1_init();
 P2_init();
 P3_init();
 P4_init();
+	
+	
 	
 	DDRC|=(1<<PINC0);
 	
@@ -192,22 +171,22 @@ P4_init();
 			rtc_get_time_s(&hour, &min, &sec);
 			if(sec % 2 )
 			{
-				kropka = 1;
+				Wyswietlacz.k2 = 1;
 				
 				
 			}
 			else
 			{
-				kropka = 0;
+				Wyswietlacz.k2 = 0;
 			}
 			//min
-			z1 = hour/10;
+			Wyswietlacz.z1 = hour/10;
 			
-			z2 = (hour-(z1*10));
+			Wyswietlacz.z2 = (hour-(Wyswietlacz.z1*10));
 
-			z3 = min/10;
+			Wyswietlacz.z3 = min/10;
 			
-			z4 = (min-(z3*10));
+			Wyswietlacz.z4 = (min-(Wyswietlacz.z3*10));
 			
 			
 			break;
@@ -218,20 +197,20 @@ P4_init();
 			licznikStopera = licznikCzasu/10;
 			if(licznikStopera > 100)
 			{
-				kropka = 1;
+				Wyswietlacz.k2 = 1;
 			}
 			else
 			{
-				kropka = 0;
+				Wyswietlacz.k2 = 0;
 			}
 
-			z1 = licznikStopera/1000;
+			Wyswietlacz.z1 = licznikStopera/1000;
 
-			z2 = (licznikStopera-(z1*1000))/100;
+			Wyswietlacz.z2 = (licznikStopera-(Wyswietlacz.z1*1000))/100;
 			
-			z3 = (licznikStopera-(z1*1000)-(z2*100))/10;
+			Wyswietlacz.z3 = (licznikStopera-(Wyswietlacz.z1*1000)-(Wyswietlacz.z2*100))/10;
 
-			z4 = (licznikStopera-(z1*1000)-(z2*100)-(z3*10));
+			Wyswietlacz.z4 = (licznikStopera-(Wyswietlacz.z1*1000)-(Wyswietlacz.z2*100)-(Wyswietlacz.z3*10));
 
 
 			if(licznikStopera == 9999) wylaczLicznikCzasu();
@@ -258,13 +237,13 @@ P4_init();
 					break;
 				}
 				
-			z1 = licznikMinutnika/1000;
+			Wyswietlacz.z1 = licznikMinutnika/1000;
 
-			z2 = (licznikMinutnika-(z1*1000))/100;
+			Wyswietlacz.z2 = (licznikMinutnika-(Wyswietlacz.z1*1000))/100;
 			
-			z3 = (licznikMinutnika-(z1*1000)-(z2*100))/10;
+			Wyswietlacz.z3 = (licznikMinutnika-(Wyswietlacz.z1*1000)-(Wyswietlacz.z2*100))/10;
 
-			z4 = (licznikMinutnika-(z1*1000)-(z2*100)-(z3*10));
+			Wyswietlacz.z4 = (licznikMinutnika-(Wyswietlacz.z1*1000)-(Wyswietlacz.z2*100)-(Wyswietlacz.z3*10));
 			
 			break;
 			default:

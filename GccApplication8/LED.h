@@ -17,6 +17,7 @@
 #define LED2_CLR LED2_PORT &= ~(1<<LED2_PIN)
 
 void LEDSet(bool v, int ledNo);
+void zmianaTrybuLed();
 
 
 

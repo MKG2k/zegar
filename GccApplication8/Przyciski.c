@@ -6,7 +6,10 @@
 */
 #include <avr/io.h>
 #include "Przyciski.h"
-
+#include "stdbool.h"
+#include "main.h"
+#include "LED.h"
+#include "Stoper.h"
 void P1_init()
 {
 	P1_DDR&=~(1<<P1_PIN);
@@ -38,4 +41,25 @@ void P4_init()
 {
 	P4_DDR&=~(1<<P4_PIN);
 	P4_PORT|=(1<<P4_PIN);
+}
+
+
+void ObsluzPrzyciskZmianyTrybu()
+{
+	
+	if(P3_STAN)
+	{
+		LEDSet(true, LED2_PIN);
+		zmianaTrybuLed();
+		tryb++;
+		
+		flagaZatrzymania = 1;
+		licznikStopera = 0;
+		
+		
+		if(tryb == 3)
+		tryb = 0;
+		LEDSet(false, LED2_PIN);
+	}
+
 }
